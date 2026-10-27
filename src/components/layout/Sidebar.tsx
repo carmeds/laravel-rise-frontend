@@ -9,6 +9,7 @@ import {
   Monitor,
   Settings,
   Users,
+  Wrench,
   X,
 } from 'lucide-react'
 
@@ -19,9 +20,10 @@ type SidebarProps = {
 
 const navigation = [
   { label: 'Escritorio', path: '/dashboard', icon: House },
-  { label: 'Mensajes', path: '/mensajes', icon: Mail },
-  { label: 'Dashboards', path: '/dashboards', icon: ChartNoAxesCombined },
+  { label: 'Tableros', path: '/tableros', icon: ChartNoAxesCombined },
+  { label: 'Servicios', path: '/servicios', icon: Wrench },
   { label: 'Pantallas', path: '/pantallas', icon: Monitor },
+  { label: 'Mensajes', path: '/mensajes', icon: Mail },
   { label: 'Usuarios', path: '/usuarios', icon: Users },
   { label: 'Configuración', path: '/configuracion', icon: Settings },
 ]
@@ -50,15 +52,13 @@ export default function Sidebar({ expanded, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed bottom-0 left-0 top-[58px] z-50 flex w-60 flex-col bg-[#a93226] text-white shadow-xl dark:bg-slate-900 dark:text-slate-100 dark:border-r dark:border-slate-800 transition-transform duration-200 ${
+        className={`fixed bottom-0 left-0 top-[58px] z-50 flex w-60 flex-col bg-[#a93226] text-white shadow-xl transition-transform duration-200 dark:border-r dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 ${
           expanded ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-hidden={!expanded}
       >
-        <div className="flex h-12 items-center justify-between border-b border-white/15 dark:border-slate-700 px-4">
-          <span className="text-xs font-semibold uppercase tracking-wider">
-            Menú principal
-          </span>
+        <div className="flex h-12 items-center justify-between border-b border-white/15 px-4 dark:border-slate-700">
+          <span className="text-xs font-semibold uppercase tracking-wider">Menú principal</span>
           <button
             type="button"
             onClick={onClose}
@@ -92,7 +92,7 @@ export default function Sidebar({ expanded, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="border-t border-white/15 dark:border-slate-700 p-3">
+        <div className="border-t border-white/15 p-3 dark:border-slate-700">
           <div className="flex items-center gap-3 rounded-md bg-white/10 px-3 py-3">
             <Activity size={18} />
             <span className="text-xs">Sistema de monitoreo</span>
