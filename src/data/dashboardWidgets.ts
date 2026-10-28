@@ -18,8 +18,8 @@ export const dashboardWidgets: DashboardWidget[] = [
   { id: 'ejecucion', title: 'Resueltos Ejecución', period: '2025', kind: 'combo', source: 'SIE-PJ', updated: '14/03/2025' },
   { id: 'pendientes', title: 'Pendientes', period: '2025', kind: 'stacked', source: 'SIE-PJ', updated: '14/03/2025' },
   { id: 'rrhh', title: 'Recursos Humanos', period: '2025', kind: 'stacked', source: 'SIE-PJ', updated: '14/03/2025' },
-  { id: 'inventario', title: 'Avance de Inventario', period: '2025', kind: 'donut', source: 'SIE-PJ', updated: '14/03/2025' },
-  { id: 'reaperturado', title: 'Avance de Inventario reaperturado', period: '2024', kind: 'line', source: 'SIE-PJ', updated: '14/03/2025' },
+  { id: 'inventario', title: 'Avance de Inventario', period: '2025', kind: 'gauge', source: 'SIE-PJ', updated: '14/03/2025' },
+  { id: 'reaperturado', title: 'Avance de Inventario reaperturado', period: '2024', kind: 'gauge', source: 'SIE-PJ', updated: '14/03/2025' },
   { id: 'jornada', title: 'Jornada Extraordinaria', period: '2024', kind: 'gauge', source: 'SIE-PJ', updated: '14/03/2025' },
-  { id: 'proteccion', title: 'Medidas de Protección', period: '2025', kind: 'stacked', source: 'SIE-PJ', updated: '14/03/2025' },
+  { id: 'proteccion', title: 'Medidas de Protección', period: '2025', kind: 'donut', source: 'SIE-PJ', updated: '14/03/2025' },
 ]

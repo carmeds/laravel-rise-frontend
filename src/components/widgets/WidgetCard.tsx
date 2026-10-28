@@ -46,9 +46,17 @@ export default function WidgetCard({
       <div className="min-w-0 px-2 pt-1">{children}</div>
 
       <footer className="mt-auto flex min-h-[43px] items-center justify-between gap-2 border-t border-slate-100 px-3 dark:border-slate-800 py-2">
-        <div className="min-w-0">
-          <p className="truncate text-[10px] text-slate-500 dark:text-slate-400">Fuente: {source}</p>
-          <p className="text-[9px] text-slate-400">Actualizado: {updated}</p>
+        <div className="flex min-w-0 items-center gap-2">
+          <img
+            src="/images/avatar-g.png"
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8 shrink-0 rounded-full object-cover"
+          />
+          <div className="min-w-0">
+            <p className="truncate text-[10px] text-slate-500 dark:text-slate-400">Fuente: {source}</p>
+            <p className="text-[9px] text-slate-400">Actualizado: {updated}</p>
+          </div>
         </div>
 
         {statusLabel && (

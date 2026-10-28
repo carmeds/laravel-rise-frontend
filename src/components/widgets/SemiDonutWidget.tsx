@@ -153,7 +153,7 @@ export default function SemiDonutWidget({
           </g>
         </svg>
 
-        <div className="pointer-events-none absolute inset-x-0 top-[48%] flex -translate-y-1/2 flex-col items-center px-2 text-center">
+        <div className="pointer-events-none absolute inset-x-0 top-[65%] flex -translate-y-1/2 flex-col items-center px-2 text-center">
           <span className="max-w-full break-words text-[15px] font-medium italic leading-tight text-slate-900 dark:text-slate-100 sm:text-base">
             {centerValue}
           </span>
@@ -163,7 +163,7 @@ export default function SemiDonutWidget({
         </div>
       </div>
 
-      <div className="-mt-1 flex items-start justify-between gap-3 px-3 pb-2">
+      <div className="-mt-1 flex items-start justify-between gap-3 px-[15%] pb-2">
         <div className="min-w-0 flex-1 text-left">
           <div className="truncate text-[12px] font-medium leading-tight text-slate-700 dark:text-slate-200">
             {leftValue}

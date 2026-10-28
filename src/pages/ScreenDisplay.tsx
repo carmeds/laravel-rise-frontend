@@ -1,14 +1,17 @@
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Monitor, Pencil } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useScreens } from '../contexts/ScreensContext'
 import { dashboardWidgets, type DashboardWidget } from '../data/dashboardWidgets'
 import WidgetCard from '../components/widgets/WidgetCard'
 import WidgetChart from '../components/widgets/WidgetChart'
+import ExpandedWidget from '../components/widgets/ExpandedWidget'
 
 export default function ScreenDisplay() {
   const { screenId = '' } = useParams()
   const navigate = useNavigate()
   const { getScreen, loading } = useScreens()
+  const [expandedWidget, setExpandedWidget] = useState<DashboardWidget | null>(null)
   const screen = getScreen(screenId)
 
   if (loading) {
@@ -40,37 +43,8 @@ export default function ScreenDisplay() {
   }
 
   return (
-    <main className="min-h-[calc(100vh-98px)] bg-slate-100 p-3 pb-16 dark:bg-slate-950 sm:p-5">
-      <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-4 dark:border-slate-800">
-          <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: `${screen.color}20`, color: screen.color }}>
-              <Monitor size={20} />
-            </span>
-            <div>
-              <h1 className="text-lg font-semibold">{screen.title}</h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400">{screen.district}</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => navigate(`/pantallas/${screen.id}/editar`)}
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
-            >
-              <Pencil size={16} /> Editar pantalla
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/pantallas')}
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
-            >
-              Crear otra pantalla
-            </button>
-          </div>
-        </header>
-
-        <div className="space-y-4 p-4">
+    <main className="min-h-[calc(100vh-98px)] bg-slate-100 px-2 py-2 pb-16 dark:bg-slate-950 sm:px-3">
+        <div className="space-y-2">
           {screen.rows.map((row) => {
             const widgets = row.widgetIds
               .filter((id): id is string => id !== null)
@@ -78,14 +52,12 @@ export default function ScreenDisplay() {
               .filter((widget): widget is DashboardWidget => widget !== undefined)
 
             if (!widgets.length) return null
-            const widthClass = 'w-full sm:w-[calc(50%-0.375rem)] xl:w-[calc(25%-0.75rem)]'
-
             return (
-              <div key={row.id} className="flex flex-wrap items-stretch justify-center gap-3">
+              <div key={row.id} className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
                 {widgets.map((widget) => (
-                  <div key={widget.id} className={`min-w-0 ${widthClass}`}>
-                    <WidgetCard title={widget.title} period={widget.period} source={widget.source} updated={widget.updated}>
-                      <div className="min-h-[190px]">
+                  <div key={widget.id} className="min-w-0">
+                    <WidgetCard title={widget.title} period={widget.period} source={widget.source} updated={widget.updated} onExpand={() => setExpandedWidget(widget)}>
+                      <div className="flex min-h-[230px] items-center justify-center">
                         <WidgetChart widget={widget} />
                       </div>
                     </WidgetCard>
@@ -95,7 +67,7 @@ export default function ScreenDisplay() {
             )
           })}
         </div>
-      </section>
+        {expandedWidget && <ExpandedWidget widget={expandedWidget} onClose={() => setExpandedWidget(null)} />}
     </main>
   )
 }

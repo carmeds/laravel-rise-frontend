@@ -29,12 +29,15 @@ export default function ScreenBuilder() {
     ? getScreen(screenId)
     : undefined
 
-  // Estado propio de la página: guardado, vista previa y mensajes.
-  const [savedScreen, setSavedScreen] = useState<SavedScreen | null>(null)
+  // Estado de guardado, vista previa y mensajes.
+  const [savedScreen, setSavedScreen] =
+    useState<SavedScreen | null>(null)
   const [preview, setPreview] = useState(false)
   const [message, setMessage] = useState('')
-  const [showMessageModal, setShowMessageModal] = useState(false)
-  const [editInitialized, setEditInitialized] = useState(false)
+  const [showMessageModal, setShowMessageModal] =
+    useState(false)
+  const [editInitialized, setEditInitialized] =
+    useState(false)
 
   function notify(messageText: string) {
     setMessage(messageText)
@@ -46,7 +49,8 @@ export default function ScreenBuilder() {
     setShowMessageModal(false)
   }
 
-  // Estado del formulario y distribución de widgets administrados por el hook.
+  // Estado del formulario y distribución de widgets.
+  // Los colores proceden de la configuración del backend.
   const {
     title,
     setTitle,
@@ -65,9 +69,12 @@ export default function ScreenBuilder() {
     placeWidget,
     addRow,
     deleteRow,
-  } = useScreenBuilder(clearMessage)
+    colors,
+    colorsLoading,
+    colorsError,
+  } = useScreenBuilder(clearMessage, Boolean(screenId))
 
-  // Cargar los datos cuando se edita una pantalla existente.
+  // Cargar los datos de la pantalla cuando se está editando.
   useEffect(() => {
     if (!screenId) {
       setEditInitialized(false)
@@ -105,10 +112,22 @@ export default function ScreenBuilder() {
     setRows,
   ])
 
-  // Validar y guardar una pantalla nueva o actualizar una existente.
+  // Guardar una pantalla nueva o actualizar una existente.
   async function saveScreen(showPreview: boolean) {
     if (screenId && (!editInitialized || !existingScreen)) {
       notify('No se encontró la pantalla que deseas editar.')
+      return
+    }
+
+    if (colorsLoading) {
+      notify('Espera a que termine de cargar la configuración.')
+      return
+    }
+
+    if (colorsError) {
+      notify(
+        'No se pudo cargar la configuración de colores. Recarga la página e inténtalo nuevamente.',
+      )
       return
     }
 
@@ -213,7 +232,8 @@ export default function ScreenBuilder() {
           <button
             type="button"
             onClick={() => saveScreen(false)}
-            className="inline-flex items-center gap-2 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800"
+            disabled={colorsLoading || Boolean(colorsError)}
+            className="inline-flex items-center gap-2 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Save size={16} />
             {screenId ? 'Guardar cambios' : 'Guardar'}
@@ -222,7 +242,8 @@ export default function ScreenBuilder() {
           <button
             type="button"
             onClick={() => saveScreen(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            disabled={colorsLoading || Boolean(colorsError)}
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Eye size={16} />
             {screenId
@@ -236,6 +257,9 @@ export default function ScreenBuilder() {
         title={title}
         color={color}
         district={district}
+        colors={colors}
+        colorsLoading={colorsLoading}
+        colorsError={colorsError}
         onTitleChange={(value) => {
           setTitle(value)
           clearMessage()

@@ -118,7 +118,7 @@ export default function Header({
   }, [location.pathname, loadUnreadMessages])
 
   return (
-    <header className="sticky top-0 z-50 flex h-[58px] items-center justify-between border-b border-slate-200 bg-white px-3 text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+    <header className="sticky top-0 z-50 flex h-[58px] items-center justify-between border-b border-slate-100 bg-white px-3 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
@@ -129,9 +129,15 @@ export default function Header({
           <Menu size={20} />
         </button>
 
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-red-50 text-[#a91f23] dark:bg-red-950 dark:text-red-300">
-          <Monitor size={19} />
-        </div>
+        <button
+          type="button"
+          aria-label="Ir al inicio"
+          title="Ir al inicio"
+          onClick={() => navigate('/dashboard')}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:hover:bg-slate-800"
+        >
+          <img src="/images/logo.png" alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
+        </button>
 
         <h1 className="truncate text-sm font-bold tracking-wide text-slate-700 dark:text-slate-100 sm:text-base">
           Centro de Comando y Monitoreo Jurisdiccional

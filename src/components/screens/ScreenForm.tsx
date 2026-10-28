@@ -1,30 +1,18 @@
 
 import { ChevronDown } from 'lucide-react'
+import type { ScreenColorOption } from '../../types/configuration'
 
 type ScreenFormProps = {
   title: string
   color: string
   district: string
+  colors: ScreenColorOption[]
+  colorsLoading: boolean
+  colorsError: string | null
   onTitleChange: (value: string) => void
   onColorChange: (value: string) => void
   onDistrictChange: (value: string) => void
 }
-
-const colors = [
-  '#84cc16',
-  '#22c1c3',
-  '#3098db',
-  '#a3b2b2',
-  '#eab308',
-  '#f59e0b',
-  '#ef4444',
-  '#ec4899',
-  '#a21caf',
-  '#38bdf8',
-  '#334155',
-  '#d8b4fe',
-  '#4f83f1',
-]
 
 const districts = [
   'PODER JUDICIAL',
@@ -41,6 +29,9 @@ export default function ScreenForm({
   title,
   color,
   district,
+  colors,
+  colorsLoading,
+  colorsError,
   onTitleChange,
   onColorChange,
   onDistrictChange,
@@ -97,26 +88,45 @@ export default function ScreenForm({
           Color identificativo
         </span>
 
+        {colorsLoading && (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Cargando colores...
+          </p>
+        )}
+
+        {colorsError && (
+          <p role="status" className="mb-2 text-sm text-amber-700 dark:text-amber-300">
+            No se pudo cargar la paleta desde el servidor. {colorsError}
+          </p>
+        )}
+
+        {!colorsLoading && !colorsError && colors.length === 0 && (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            No hay colores activos configurados en el servidor.
+          </p>
+        )}
+
         <div className="flex flex-wrap items-center gap-2">
           {colors.map((item) => (
             <button
-              key={item}
+              key={item.id}
               type="button"
-              title={`Seleccionar color ${item}`}
-              aria-label={`Seleccionar color ${item}`}
-              aria-pressed={color === item}
-              onClick={() => onColorChange(item)}
+              title={`${item.name} (${item.hex_color})`}
+              aria-label={`Seleccionar color ${item.name}`}
+              aria-pressed={color.toLowerCase() === item.hex_color.toLowerCase()}
+              onClick={() => onColorChange(item.hex_color)}
               className={`h-7 w-7 rounded-md transition ${
-                color === item
+                color.toLowerCase() === item.hex_color.toLowerCase()
                   ? 'ring-2 ring-slate-500 ring-offset-2 dark:ring-offset-slate-900'
                   : 'hover:scale-110'
               }`}
-              style={{ backgroundColor: item }}
+              style={{ backgroundColor: item.hex_color }}
             />
           ))}
 
           <span
-            className="ml-1 h-7 w-12 rounded-full"
+            className="ml-1 h-7 w-12 rounded-full border border-slate-200 dark:border-slate-700"
+            title={`Color seleccionado: ${color}`}
             style={{ backgroundColor: color }}
           />
         </div>

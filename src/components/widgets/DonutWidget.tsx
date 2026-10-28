@@ -33,8 +33,8 @@ export default function DonutWidget({
   const displayedValue = centerValue ?? `${total}%`
 
   return (
-    <div className="w-full" style={{ height }}>
-      <div className="relative h-full w-full">
+    <div className="flex w-full items-center" style={{ height }}>
+      <div className="relative h-full min-w-0 flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -42,9 +42,9 @@ export default function DonutWidget({
               dataKey="value"
               nameKey="name"
               cx="50%"
-              cy={showLegend ? '43%' : '50%'}
+              cy="50%"
               innerRadius="48%"
-              outerRadius="70%"
+              outerRadius="78%"
               paddingAngle={3}
               stroke="none"
             >
@@ -76,21 +76,21 @@ export default function DonutWidget({
             <span className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{centerLabel}</span>
           )}
         </div>
-
-        {showLegend && (
-          <div className="absolute inset-x-0 bottom-0 flex flex-wrap justify-center gap-x-3 gap-y-1">
-            {data.map((item, index) => (
-              <div key={item.name} className="flex items-center gap-1">
-                <span
-                  className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: colors[index % colors.length] }}
-                />
-                <span className="text-[9px] text-slate-500 dark:text-slate-400">{item.name}</span>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
+
+      {showLegend && (
+        <div className="flex w-[34%] shrink-0 flex-col justify-center gap-2 pl-1">
+          {data.map((item, index) => (
+            <div key={item.name} className="flex min-w-0 items-center gap-1.5">
+              <span
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: colors[index % colors.length] }}
+              />
+              <span className="min-w-0 break-words text-[9px] leading-tight text-slate-500 dark:text-slate-400">{item.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

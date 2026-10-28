@@ -67,7 +67,7 @@ export default function WidgetChart({ widget }: WidgetChartProps) {
         <DonutWidget
           data={donutData}
           colors={[theme.chart.red, theme.chart.lightBlue, theme.chart.gray]}
-          height={174}
+          height={200}
           centerValue="100%"
           showLegend
         />

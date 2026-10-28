@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react'
+
+import { useEffect, useMemo, useState } from 'react'
+
 import type { ScreenRow } from '../contexts/ScreensContext'
 import type { DashboardWidget } from '../data/dashboardWidgets'
 import { dashboardWidgets } from '../data/dashboardWidgets'
+import { useConfiguration } from './useConfiguration'
 
-const DEFAULT_COLOR = '#4f83f1'
 const DEFAULT_DISTRICT = 'PODER JUDICIAL'
 
 function createRow(): ScreenRow {
@@ -14,12 +16,30 @@ function createRow(): ScreenRow {
   }
 }
 
-export function useScreenBuilder(clearMessage: () => void) {
+export function useScreenBuilder(
+  clearMessage: () => void,
+  isEditing = false,
+) {
+  const {
+    colors,
+    defaultColor,
+    loading: colorsLoading,
+    error: colorsError,
+  } = useConfiguration()
+
   const [title, setTitle] = useState('')
-  const [color, setColor] = useState(DEFAULT_COLOR)
+  const [color, setColor] = useState(defaultColor)
   const [district, setDistrict] = useState(DEFAULT_DISTRICT)
   const [rows, setRows] = useState<ScreenRow[]>(() => [createRow()])
   const [draggedWidget, setDraggedWidget] = useState<string | null>(null)
+
+  // Aplicar el color predeterminado al crear una pantalla.
+  // Al editar, se conserva el color que ya tenía la pantalla.
+  useEffect(() => {
+    if (!isEditing) {
+      setColor(defaultColor)
+    }
+  }, [defaultColor, isEditing])
 
   const placedIds = useMemo(
     () =>
@@ -34,11 +54,16 @@ export function useScreenBuilder(clearMessage: () => void) {
   )
 
   const availableWidgets = useMemo(
-    () => dashboardWidgets.filter((widget) => !placedIds.has(widget.id)),
+    () =>
+      dashboardWidgets.filter(
+        (widget) => !placedIds.has(widget.id),
+      ),
     [placedIds],
   )
 
-  function getWidget(id: string | null): DashboardWidget | undefined {
+  function getWidget(
+    id: string | null,
+  ): DashboardWidget | undefined {
     return dashboardWidgets.find((widget) => widget.id === id)
   }
 
@@ -53,7 +78,11 @@ export function useScreenBuilder(clearMessage: () => void) {
           widgetIds.push(null)
         }
 
-        return { ...row, columns, widgetIds }
+        return {
+          ...row,
+          columns,
+          widgetIds,
+        }
       }),
     )
 
@@ -89,7 +118,9 @@ export function useScreenBuilder(clearMessage: () => void) {
         )
         .find((slot) => slot.id === widgetId)
 
-      const targetRow = current.find((row) => row.id === targetRowId)
+      const targetRow = current.find(
+        (row) => row.id === targetRowId,
+      )
 
       if (
         !targetRow ||
@@ -99,7 +130,8 @@ export function useScreenBuilder(clearMessage: () => void) {
         return current
       }
 
-      const displacedWidget = targetRow.widgetIds[targetIndex] ?? null
+      const displacedWidget =
+        targetRow.widgetIds[targetIndex] ?? null
 
       const next = current.map((row) => ({
         ...row,
@@ -112,11 +144,14 @@ export function useScreenBuilder(clearMessage: () => void) {
         )
 
         if (sourceRow) {
-          sourceRow.widgetIds[sourcePosition.index] = displacedWidget
+          sourceRow.widgetIds[sourcePosition.index] =
+            displacedWidget
         }
       }
 
-      const destinationRow = next.find((row) => row.id === targetRowId)
+      const destinationRow = next.find(
+        (row) => row.id === targetRowId,
+      )
 
       if (destinationRow) {
         destinationRow.widgetIds[targetIndex] = widgetId
@@ -134,7 +169,10 @@ export function useScreenBuilder(clearMessage: () => void) {
   }
 
   function deleteRow(rowId: string) {
-    setRows((current) => current.filter((row) => row.id !== rowId))
+    setRows((current) =>
+      current.filter((row) => row.id !== rowId),
+    )
+
     clearMessage()
   }
 
@@ -156,5 +194,10 @@ export function useScreenBuilder(clearMessage: () => void) {
     placeWidget,
     addRow,
     deleteRow,
+
+    // Configuración centralizada de colores.
+    colors,
+    colorsLoading,
+    colorsError,
   }
 }
